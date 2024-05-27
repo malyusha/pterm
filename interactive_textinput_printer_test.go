@@ -85,6 +85,18 @@ func TestInteractiveTextInputPrinter_OnEnter(t *testing.T) {
 	testza.AssertEqual(t, "default", result)
 }
 
+func TestInteractiveTextInputPrinter_Editable(t *testing.T) {
+	go func() {
+		// change `bar` to `baz` by simulating press Left & enter `z` key.
+		keyboard.SimulateKeyPress(keys.Left)
+		keyboard.SimulateKeyPress(keys.Key{Code: keys.RuneKey, Runes: []rune{'t'}})
+		keyboard.SimulateKeyPress(keys.Enter)
+	}()
+
+	result, _ := pterm.DefaultInteractiveTextInput.WithDefaultValue("default").Show()
+	testza.AssertEqual(t, "defaultt", result)
+}
+
 func TestInteractiveTextInputPrinter_WithMultiLineOnTab(t *testing.T) {
 	go func() {
 		keyboard.SimulateKeyPress(keys.Tab)
